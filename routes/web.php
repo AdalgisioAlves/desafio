@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/cliente', 'ClientesController@index');// Novo cliente 
+Route::post('/cliente/store', 'ClientesController@store');// Novo cliente
+Route::post('/cliente/saldo', 'ClientesController@saldo');// Novo cliente
+Route::post('/cliente/deposito', 'ClientesController@deposito');// Novo cliente
+Route::post('/cliente/saque', 'ClientesController@saque');// Novo cliente
+ 
