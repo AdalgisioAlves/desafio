@@ -16,10 +16,10 @@ class Contas extends Migration
         //
         Schema::create('contas', function (Blueprint $table) {
             $table->id();
-            $table->integer('cliente_id')->unsigned();
-            $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->unsignedInteger('cliente_id');            
             $table->decimal('saldo',9,2);
             $table->timestamps();
+            $table->foreign('cliente_id')->references('id')->on('clientes');
         });
     }
 
@@ -31,5 +31,6 @@ class Contas extends Migration
     public function down()
     {
         //
+        Schema::dropIfExists('contas');
     }
 }
