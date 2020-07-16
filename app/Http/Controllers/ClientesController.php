@@ -120,17 +120,48 @@ class ClientesController extends Controller
     public function saldo(Request $request)
     {
         $input = $request->all();
-        $saldo_cliente = DB::table('clientes')
-            ->join('contas', 'cliente_id', '=', 'clientes.id')
+       
+       
+
+        if($input['cpf'])
+        {
+            $rs = DB::table('clientes')
+            ->leftJoin('contas', 'cliente_id', '=', 'clientes.id')
             ->select('clientes.*', 'contas.saldo')
-            ->where('clientes.cpf','=',$input['cpf'])
-            ->get();
+            ->where('clientes.cpf','=',$input['cpf']);
+
+          //  return response()->json($rs->count(), 201);
+            if($rs->count() >0)
+            {
+                $saldo = $rs->get();
+                $data = array(
+                'msg' =>'Consulta de Saldo ',
+                'data'=> date('d/m/Y H:m'),                 
+                'erro'=>0,
+                'saldo' => number_format($saldo[0]->saldo,2),
+                'cliente'=>$saldo[0]->nome
+                 );
+                 return response()->json($data, 201);
+            }
+            else{
+                $data = array(
+                    'msg' =>'Cliente Não encontrado',
+                    'data'=> date('d/m/Y H:m'), 
+                    'erro'=>1           
+                );
+                return response()->json($data, 201);
+            }
+            
+        }
+        
         $data = array(
-            'msg' =>'Consulta de Saldo ',
-            'data'=> date('d/m/Y H:m'), 
-            'saldo' => number_format($saldo_cliente[0]->saldo,2)
+            'msg' =>'Cpf invalido',
+            'data'=> date('d/m/Y H:m'),    
+            'erro'=>1        
         );
-        return response()->json($data, 200); 
+        return response()->json($data, 201);
+        
+    
     }
     public function saque(Request $request)
     {
@@ -159,8 +190,10 @@ class ClientesController extends Controller
                 ->where('cliente_id','=',$dd_cliente->id)
                 ->update(['saldo' => $saldo]);
                 $data = array(
+                    'erro' => 0,
                     'msg'=>'Saque Realizado com Sucesso',
-                    'saldo'=>  number_format($saldo,2)
+                    'saldo'=>  number_format($saldo,2),
+                    'cliente'=> $dd_cliente->nome
                 );
                 return response()->json($data, 200);
             }
@@ -185,8 +218,10 @@ class ClientesController extends Controller
                     ->where('cliente_id','=',$dd_cliente->id)
                     ->update(['saldo' => $saldo]);
                     $data = array(
+                        'erro' => 0,
                         'msg'=>'Deposito Realizado com Sucesso',
-                        'saldo'=> number_format($saldo,2)
+                        'saldo'=> number_format($saldo,2),
+                        'cliente'=> $dd_cliente->nome
                     );
                     return response()->json($data, 200);
     
@@ -196,6 +231,7 @@ class ClientesController extends Controller
          
        $data = array(
         'msg'=>'Deposito Não Realizado parametros invalidos',
+        'erro'=> 1
         
         );
         return response()->json($data, 200);

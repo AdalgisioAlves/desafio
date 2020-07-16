@@ -1,51 +1,58 @@
+/* eslint-disable vue/no-async-in-computed-properties */
+/* eslint-disable vue/no-async-in-computed-properties */
+/* eslint-disable vue/no-async-in-computed-properties */
 <template>
-  <div class=" col-md-6 left-align">
+  <div class="col-md-6 align-content-left">
     <form>
-  <div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-  </div>
-  <div class="form-group">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1">
-  </div>
-  <div class="form-group form-check">
-    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Digite CPF Para Acessar</label>
+        <input type="text" class="form-control" v-model="cpf" />
+        <small
+          id="emailHelp"
+          class="form-text text-muted"
+        >We'll never share your email with anyone else.</small>
+      </div>
+      <button type="submit" class="btn btn-primary" v-on:click="loginCliente">Enviar</button>
+    </form>
+    <div class="alert alert-primary" role="alert">{{mensagem}}</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  data () {
+  name: "HelloWorld",
+  data: function() {
     return {
-      msg: 'Bem Vindo Ao Seu Banco da Praça'
+      cpf: '',
+      mensagem:''
+    };
+  },
+  methods: {
+    // eslint-disable-next-line vue/return-in-computed-property
+    loginCliente: function() {
+      if (!this.cpf) {
+        alert("Digite Um CPF Valido");
+      } else {
+        // eslint-disable-next-line vue/no-async-in-computed-properties
+        let nthis = this
+        this.axios
+          .post("http://localhost:8000/cliente/saldo", {
+            cpf: this.cpf
+          })
+          .then(function(response) {
+            let ret = response.data;
+          
+            if (ret["erro"] == 0) {
+              nthis.mensagem = 'Olá ' + ret['cliente'] + 'Seu Saldo :' + ret['saldo']             
+                
+            }
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+           
+      }
     }
   }
-}
-
+};
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-
-</style>

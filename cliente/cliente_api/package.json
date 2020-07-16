@@ -12,8 +12,11 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "cors": "^2.8.5",
     "vue": "^2.5.2",
+    "vue-axios": "^2.1.5",
     "vue-material": "^1.0.0-beta-14",
+    "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
@@ -72,5 +75,6 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "proxy": "http://127.0.0.1:8000"
 }

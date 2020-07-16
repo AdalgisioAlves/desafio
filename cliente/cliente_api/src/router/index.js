@@ -4,8 +4,11 @@ import HelloWorld from '@/components/HelloWorld'
 import Saldo from '@/components/Saldo'
 import Saque from '@/components/Saque'
 import Deposito from '@/components/Deposito'
-
-Vue.use(Router)
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+//axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
+Vue.use(Router) 
+Vue.use(VueAxios,axios)
 
 export default new Router({
   routes: [

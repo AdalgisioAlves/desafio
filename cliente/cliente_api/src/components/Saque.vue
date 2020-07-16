@@ -1,34 +1,61 @@
+/* eslint-disable vue/no-async-in-computed-properties */
+/* eslint-disable vue/no-async-in-computed-properties */
+/* eslint-disable vue/no-async-in-computed-properties */
 <template>
-  <div class="hello">
-    <h4>Saque</h4>
+  <div class="col-md-6 align-content-left">
+    <form>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Digite CPF Para Sacar</label>
+        <input type="text" class="form-control" v-model="cpf" />
+      </div>
+      <div class="form-group">
+        <label for="exampleInputEmail1">Digite O Valor do Saque</label>
+        <input type="text" class="form-control" v-model="valor" />
+      </div>
+      <button type="submit" class="btn btn-primary" v-on:click="loginCliente">Enviar</button>
+    </form>
+    <div class="alert alert-primary" role="alert">{{mensagem}}</div>
+    
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Saque',
-  data () {
+  name: "Deposito",
+  data: function() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      cpf: '',
+      mensagem:'',
+      valor:''
+    };
+  },
+  methods: {
+    // eslint-disable-next-line vue/return-in-computed-property
+    loginCliente: function() {
+      if (!this.cpf) {
+        alert("Digite Um CPF Valido");
+      } else {
+        // eslint-disable-next-line vue/no-async-in-computed-properties
+        let nthis = this
+        this.axios
+          .post("http://127.0.0.1:8000/cliente/saque", {
+            cpf: this.cpf,
+            valor: this.valor
+          })
+          .then(function(response) {
+            let ret = response.data;
+          
+            if (ret["erro"] == 0) {
+              nthis.mensagem = 'Olá ' + ret['cliente'] + 'Seu Saldo :' + ret['saldo']             
+                
+            }
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+           
+      }
     }
   }
-}
+};
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return response()->json('', 200, $headers);;
 });
 Route::get('/cliente', 'ClientesController@index');// Novo cliente 
 Route::post('/cliente/store', 'ClientesController@store');// Novo cliente
